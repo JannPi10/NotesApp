@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
     id("org.jetbrains.kotlin.kapt")
 }
 
@@ -39,7 +38,7 @@ android {
     }
 
     buildFeatures {
-        compose = false // ya que tu app no es Compose, si luego lo es, se pone true
+        compose = false
     }
 }
 
@@ -52,6 +51,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
     kapt(libs.androidx.room.compiler)
 
     // Tests
@@ -59,7 +59,4 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // (Compose si luego lo usas)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.material3)
 }

@@ -1,40 +1,78 @@
 package com.example.notesapp
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.notesapp.dao.NotaRepository
 import com.example.notesapp.database.NoteDatabase
+import com.example.notesapp.entities.CategoryEntity
 import com.example.notesapp.entities.NotasEntity
-import com.example.notesapp.ui.theme.NotesAppTheme
+import com.example.notesapp.utils.CryptoUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
 
+    //DECLARAMOS LAS VARIABLES QUE USAREMOS
     private lateinit var repository: NotaRepository
-
+    private lateinit var db : NoteDatabase
+    private lateinit var spinner: Spinner
+    private var categories : List<CategoryEntity> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        repository = NotaRepository(NoteDatabase.getDatabase(this).notaDao)
+        db = NoteDatabase.getDatabase(this)
+        //repository = NotaRepository(NoteDatabase.getDatabase(this).notaDao)
+        repository = NotaRepository(db.notaDao)
 
         val btnLogin = findViewById<Button>(R.id.btnLogin)
         val editTextTitulo = findViewById<EditText>(R.id.editTextTitulo)
         val editTextAutor = findViewById<EditText>(R.id.editTextAutor)
+        spinner = findViewById(R.id.spinnerCategoria)
+
+        // Aquí agregas las categorías por defecto
+        lifecycleScope.launch(Dispatchers.IO) {
+            val dao = db.CategoryDao
+            if (dao.getAllCategories().isEmpty()) {
+                listOf("Trabajo", "Escuela", "Personal").forEach {
+                    dao.insertCategory(CategoryEntity(category = CryptoUtils.encrypt(it)))
+                }
+            }
+        }
+
+        //  Luego cargamos el Spinner
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            categories = db.CategoryDao.getAllCategories()
+            val nombres = categories.map {
+                val decrypted = CryptoUtils.decrypt(it.category)
+                Log.d("SPINNER", "Desencriptando categoría: $decrypted")
+                decrypted
+            }
+
+            withContext(Dispatchers.Main){
+                val adapter = ArrayAdapter(this@MainActivity, android.R.layout.simple_spinner_dropdown_item, nombres)
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinner.adapter = adapter
+            }
+        }
 
         btnLogin.setOnClickListener {
             val titulo = editTextTitulo.text.toString()
             val autor = editTextAutor.text.toString()
+            val categoria = categories.getOrNull(spinner.selectedItemPosition)
 
-            if (titulo.isNotEmpty() && autor.isNotEmpty()) {
-                insertarNota(titulo, autor)
+            if (titulo.isNotEmpty() && autor.isNotEmpty() && categoria != null) {
+                insertarNota(titulo, autor, categoria.id)
                 Toast.makeText(this, "Nota Guardada correctamente", Toast.LENGTH_LONG).show()
             } else {
                 Toast.makeText(this, "Completa los campos", Toast.LENGTH_LONG).show()
@@ -43,11 +81,11 @@ class MainActivity : ComponentActivity() {
     }
 
 
-    private fun insertarNota(titulo: String, autor: String) {
-
+    private fun insertarNota(titulo: String, autor: String, id: Int) {
         val nuevaNota = NotasEntity(
-            titulo = titulo,
-            autor = autor
+            titulo = CryptoUtils.encrypt(titulo),
+            autor = CryptoUtils.encrypt(autor),
+            category_id = id
         )
 
         lifecycleScope.launch(Dispatchers.IO) {

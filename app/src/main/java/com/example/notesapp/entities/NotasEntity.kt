@@ -9,4 +9,5 @@ data class NotasEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "titulo") val titulo: String,
     @ColumnInfo(name = "autor") val autor: String,
+    @ColumnInfo(name = "Category_id") val category_id: Int
 )

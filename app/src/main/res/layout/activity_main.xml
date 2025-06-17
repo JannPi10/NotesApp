@@ -17,6 +17,12 @@
         android:layout_height="wrap_content"
         android:hint="Autor de la nota" />
 
+    <Spinner
+        android:id="@+id/spinnerCategoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"/>
+
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="wrap_content"
@@ -24,8 +30,8 @@
         android:text="Guardar Nota" />
 
     <Button
-        android:id="@+id/btnRegistro"
-        android:text="Registro"
+        android:id="@+id/btnVerNotas"
+        android:text="Ver notas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </LinearLayout>
