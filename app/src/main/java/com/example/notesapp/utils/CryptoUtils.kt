@@ -1,6 +1,7 @@
 package com.example.notesapp.utils
 
 import android.util.Base64
+import android.util.Log
 import java.security.SecureRandom
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
@@ -35,5 +36,20 @@ object CryptoUtils {
         cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec)
 
         return String(cipher.doFinal(encrypted))
+    }
+
+    fun decryptIfEncrypted(data: String): String {
+        return try {
+            // Verifica si tiene caracteres válidos de Base64 y es suficientemente largo
+            if (!data.matches(Regex("^[A-Za-z0-9+/=]+$")) || data.length < 24) {
+                Log.w("CryptoUtils", "Texto no parece cifrado, devolviendo original: $data")
+                return data
+            }
+
+            decrypt(data)
+        } catch (e: Exception) {
+            Log.e("CryptoUtils", "Error desencriptando, devolviendo original: ${e.message}")
+            data
+        }
     }
 }

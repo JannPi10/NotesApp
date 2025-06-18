@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearContainer"
     android:orientation="vertical"
     android:padding="24dp"
     android:layout_width="match_parent"
@@ -9,29 +10,33 @@
         android:id="@+id/editTextTitulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         android:hint="Título de la nota" />
 
     <EditText
         android:id="@+id/editTextAutor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         android:hint="Autor de la nota" />
 
     <Spinner
         android:id="@+id/spinnerCategoria"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"/>
+        android:layout_marginTop="50dp"/>
 
     <Button
         android:id="@+id/btnLogin"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="300dp"
         android:text="Guardar Nota" />
 
     <Button
         android:id="@+id/btnVerNotas"
         android:text="Ver notas"
         android:layout_width="match_parent"
+        android:layout_marginTop="12dp"
         android:layout_height="wrap_content" />
 </LinearLayout>

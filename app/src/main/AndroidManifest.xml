@@ -12,6 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NotesApp"
         tools:targetApi="31">
+        <activity android:name=".DetalleNotaActivity" />
+        <activity
+            android:name=".VerNotasActivity"
+            android:theme="@style/Theme.NotesApp"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

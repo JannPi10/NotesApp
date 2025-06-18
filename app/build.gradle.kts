@@ -52,11 +52,15 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.appcompat)
     kapt(libs.androidx.room.compiler)
 
     // Tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    //Fragmentos
+    implementation("androidx.fragment:fragment-ktx:1.8.8")
 
 }
